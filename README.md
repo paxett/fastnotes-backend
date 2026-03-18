@@ -38,36 +38,37 @@ SUPERUSER_PASSWORD=admin_pwd
 docker-compose up --build
 ```
 
-После запуска API будет доступно по адресу: http://localhost:8000
+## 🔐 Доступы (Swagger)
 
-### Документация API
-FastAPI автоматически генерирует интерактивную документацию:
-Swagger UI: http://localhost:8000/docs — здесь можно потестировать все эндпоинты (GET, POST, PATCH, DELETE).
-ReDoc: http://localhost:8000/redoc
+После запуска перейдите на: [http://localhost:8000/docs](http://localhost:8000/docs)
+1. Зарегистрируйтесь через `/register`.
+2. Нажмите **Authorize** сверху, введите Email и Пароль.
+3. Теперь вы можете создавать и видеть только свои заметки.
 
-### Структура проекта
-app/main.py	          Точка входа, подключение роутеров и запуск FastAPI.
-app/database.py	      Настройка асинхронного движка и сессий SQLAlchemy.
-app/config.py	        Чтение переменных из .env через Pydantic Settings.
-app/models/	          Структура таблиц БД (SQLAlchemy классы).
-app/schemas/	        Правила валидации входящих/исходящих JSON (Pydantic).
-app/api/v1/	          Бизнес-логика: эндпоинты для заметок и пользователей.
-app/api/deps.py	      Зависимости: получение юзера из токена, проверка прав.
-app/core/security.py	Инструменты: хеширование паролей и работа с JWT.
-.env	                Твои секреты: пароль к базе и секретный ключ JWT.
+## 🛠 Быстрые команды
 
-🔥 Шпаргалка по управлению проектом
-🐳 Docker Compose (Инфраструктура)
-docker compose up -d — запустить проект в фоне.
-docker compose up --build — пересобрать образы (нужно, если обновил requirements.txt).
-docker compose logs -f web — смотреть «живые» логи приложения.
-docker compose down — остановить проект.
-docker compose down -v — СБРОС: удалить всё (контейнеры, базу, таблицы и данные).
-🛠 Alembic (Миграции базы данных)
-docker compose exec web alembic revision --autogenerate -m "Init" — создать «чертеж» новой миграции (после изменений в models/).
-docker compose exec web alembic upgrade head — применить все миграции (создать/обновить таблицы в БД).
-docker compose exec web alembic history — посмотреть список всех созданных миграций.
-👤 Пользователи и скрипты
-docker compose exec web python -m app.initial_data — запустить скрипт создания админа вручную.
+### Контейнеры (Docker)
+* `docker compose up -d` — запустить проект в фоне
+* `docker compose up --build` — пересобрать (после правки requirements.txt)
+* `docker compose logs -f web` — смотреть "живые" логи приложения
+* `docker compose down -v` — **СБРОС**: удалить контейнеры и данные базы
 
+### База данных (Alembic)
+* `docker compose exec web alembic revision --autogenerate -m "Init"` — создать миграцию
+* `docker compose exec web alembic upgrade head` — применить миграции (обновить таблицы)
+* `docker compose exec web python -m app.initial_data` — создать админа вручную
 
+---
+
+## 📂 Структура проекта
+
+| Файл / Папка | Описание |
+| :--- | :--- |
+| **app/main.py** | Точка входа, подключение роутеров FastAPI |
+| **app/database.py** | Настройка асинхронного движка SQLAlchemy |
+| **app/models/** | Таблицы БД (User, Note) |
+| **app/schemas/** | Валидация данных Pydantic |
+| **app/api/v1/** | Эндпоинты (логика заметок и пользователей) |
+| **app/api/deps.py** | Зависимости (проверка токенов, права доступа) |
+| **app/core/** | Безопасность (JWT, хеширование паролей) |
+| **.env** | Секретные ключи и пароли к БД |
