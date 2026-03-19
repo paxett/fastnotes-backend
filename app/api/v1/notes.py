@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, Select
+from sqlalchemy import select
 from typing import List
+from fastapi import status
 
-from app.api import get_db, get_current_user, get_current_superuser, apply_user_filter
+from app.api import get_db, get_current_user, apply_user_filter
 from app.models import Note
 from app.schemas import NoteCreate, NoteResponse, NoteUpdate
-from app.api.deps import get_current_user
 from app.models.user import User
 from app.core import constants
 
@@ -50,7 +50,7 @@ async def get_note(
     note = result.scalar_one_or_none()
     
     if not note:
-        raise HTTPException(status_code=404, detail=constants.NOTE_NOT_FOUND)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=constants.NOTE_NOT_FOUND)
     
     return note
 
@@ -66,7 +66,7 @@ async def delete_note(
     note = result.scalar_one_or_none()
     
     if not note:
-        raise HTTPException(status_code=404, detail=constants.NOTE_NOT_FOUND)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=constants.NOTE_NOT_FOUND)
     
     await db.delete(note)
     await db.commit()
@@ -86,7 +86,7 @@ async def update_note(
     note = result.scalar_one_or_none()
 
     if not note:
-        raise HTTPException(status_code=404, detail=constants.NOTE_NOT_FOUND)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=constants.NOTE_NOT_FOUND)
 
     update_data = note_data.model_dump(exclude_unset=True)
     for key, value in update_data.items():

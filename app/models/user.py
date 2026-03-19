@@ -1,6 +1,10 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 from typing import List
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .note import Note
 
 class User(Base):
     __tablename__ = "users"
@@ -14,5 +18,5 @@ class User(Base):
         nullable=False
     )
 
-    notes: Mapped[List["Note"]] = relationship(back_populates="owner", cascade="all, delete-orphan")
+    notes: Mapped[List["Note"]] = relationship("Note", back_populates="owner", cascade="all, delete-orphan")
 

@@ -1,7 +1,11 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ..database import Base
-from datetime import datetime,timezone
+from datetime import datetime
 from sqlalchemy import func, ForeignKey
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .user import User
 
 class Note(Base):
     __tablename__ = "notes"
@@ -16,4 +20,4 @@ class Note(Base):
     )
 
     owner_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    owner: Mapped["User"] = relationship(back_populates="notes")
+    owner: Mapped["User"] = relationship("User", back_populates="notes")

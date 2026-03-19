@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from app.api import get_db
@@ -21,7 +21,7 @@ async def register_user(user_data: UserCreate, db: AsyncSession = Depends(get_db
         await db.refresh(new_user)
         return new_user
     except Exception:
-        raise HTTPException(status_code=400, detail=constants.USER_ALREADY_EXISTS)
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=constants.USER_ALREADY_EXISTS)
 
 @router.post("/login", response_model=Token)
 async def login(
@@ -33,7 +33,7 @@ async def login(
 
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=401,
             detail=constants.INVALID_CREDENTIALS,
             headers={"WWW-Authenticate": "Bearer"},
         )

@@ -4,7 +4,7 @@ from datetime import datetime
 
 class NoteCreate(BaseModel):
     title: str = Field(..., min_length=3, max_length=50, description="Заголовок заметки")
-    content: str = Field(..., max_length=1000, description="Текст заметки")
+    content: Optional[str] = Field(default="", max_length=1000, description="Текст заметки")
 
 class NoteUpdate(BaseModel):
     title: Optional[str] = Field(None, min_length=3, max_length=50)
