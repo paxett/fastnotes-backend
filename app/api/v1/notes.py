@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from typing import List
-from fastapi import status
 
 from app.api import get_db, get_current_user, apply_user_filter
 from app.models import Note

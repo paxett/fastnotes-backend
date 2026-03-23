@@ -1,10 +1,11 @@
-from app.models import Base, Note
+from app.database import Base
 from app.config import settings
 from logging.config import fileConfig
 from sqlalchemy.ext.asyncio import async_engine_from_config
 from sqlalchemy import pool
 from alembic import context
 import asyncio
+import os
 
 config = context.config
 
@@ -12,7 +13,6 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 target_metadata = Base.metadata
-
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
@@ -51,8 +51,11 @@ async def run_migrations_online() -> None:
 
     """
 
+    target_url = settings.DATABASE_URL
+    print(f"DEBUG: Alembic is connecting to: {target_url}")
+
     configuration = config.get_section(config.config_ini_section)
-    configuration["sqlalchemy.url"] = settings.DATABASE_URL
+    configuration["sqlalchemy.url"] = target_url
     connectable = async_engine_from_config(
         configuration,
         prefix="sqlalchemy.",

@@ -24,10 +24,8 @@ cd fastnotes-backend
 POSTGRES_USER=myuser
 POSTGRES_PASSWORD=mypassword
 POSTGRES_DB=myapp_db
-POSTGRES_HOST=db
+POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
-
-DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
 
 SECRET_KEY=5ab0dcf21f6b6c8069bd2bf4af123670b70bd9cff56de2e2e8a2d053c6036757
 ALGORITHM=HS256
@@ -37,11 +35,22 @@ SUPERUSER_EMAIL=admin@example.com
 SUPERUSER_PASSWORD=admin_pwd
 ```
 
-### 3. Запуск в Docker
+### 3. Запуск в Docker (Settings.DEBUG=False)
 Проект настроен на автоматическое применение миграций при старте.
 ```bash
 docker-compose up --build
 ```
+
+### 3. Запуск в Idea (Settings.DEBUG=True)
+1. Запуск db контейнера:
+```bash 
+docker-compose up --build db
+```
+2. Применение alembic миграции и создание суперюзера:
+```bash 
+   alembic upgrade head && python -m app.initial_data
+```
+3. Запуск через конфигурацию fast-notes.run.xml в Idea
 
 ## 🔐 Доступы (Swagger)
 

@@ -21,8 +21,8 @@ services:
     build: .
     container_name: fastnotes_app
     command: >
-      sh -c "alembic upgrade head; 
-             python -m app.initial_data; 
+      sh -c "alembic upgrade head && 
+             python -m app.initial_data && 
              uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
     volumes:
       - .:/app
@@ -30,6 +30,9 @@ services:
       - "8000:8000"
     env_file:
       - .env
+    environment:
+      - POSTGRES_HOST=db
+      - DEBUG=false
     depends_on:
       db:
         condition: service_healthy
