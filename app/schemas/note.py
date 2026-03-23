@@ -18,3 +18,12 @@ class NoteResponse(NoteCreate):
     class Config:
         from_attributes = True
 
+
+class PaginationMeta(BaseModel):
+    total: int
+    limit: int
+    offset: int
+
+class NoteListResponse(BaseModel):
+    items: list[NoteResponse]
+    pagination: PaginationMeta
